@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+*.deb
+*.iso
+distro/.build/
+distro/chroot/
+distro/binary/
+distro/cache/
+.pytest_cache/
+distro/config/includes.chroot/
+*.bundle
+*.iso.part-*
+*.iso.sha256
+*.zip
