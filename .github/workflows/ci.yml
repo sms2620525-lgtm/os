@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: System libraries for Qt (offscreen)
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 dpkg-dev shellcheck
+      - name: Python dependencies
+        run: pip install -r requirements.txt pytest pyflakes
+      - name: Lint
+        run: |
+          python -m pyflakes fenestra tests
+          shellcheck -S warning bin/* scripts/*.sh distro/build.sh distro/config/hooks/live/*.hook.chroot
+      - name: Tests
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest -q tests
+      - name: Install into a staging root
+        run: make install DESTDIR=$PWD/stage PREFIX=/usr && find stage -maxdepth 4 | head -50
+
+  test-macos:
+    # macos-14 runners are Apple Silicon (M1): the same CPU family as a MacBook Air M1
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dependencies
+        run: |
+          brew install bash
+          pip install -r requirements-macos.txt pytest
+      - name: Tests (Apple Silicon)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest -q tests
+      - name: Runtime report
+        run: PYTHONPATH=. python -m fenestra.compat host

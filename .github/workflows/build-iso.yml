@@ -1,0 +1,36 @@
+name: Build ISO
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  ubuntu-iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Build tools
+        run: sudo apt-get update && sudo apt-get install -y debootstrap squashfs-tools xorriso grub-pc-bin grub-efi-amd64-bin mtools dosfstools python3
+      - name: Build ISO
+        run: sudo ./distro/ubuntu/build-iso.sh "$RUNNER_TEMP/iso"
+      - name: Collect
+        run: mkdir -p out && sudo cp "$RUNNER_TEMP"/iso/*.iso "$RUNNER_TEMP"/iso/*.sha256 out/ && sudo chown -R "$USER" out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fenestra-os-ubuntu-amd64-iso
+          path: out/*
+          compression-level: 0
+      - name: Attach to release (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
