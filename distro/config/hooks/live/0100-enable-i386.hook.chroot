@@ -1,0 +1,8 @@
+#!/bin/sh
+# PCs (amd64): Wine needs 32-bit libraries for 32-bit Windows programs; the i386
+# architecture can only be enabled after bootstrap, so wine32 is installed here.
+set -e
+[ "$(dpkg --print-architecture)" = amd64 ] || exit 0
+dpkg --add-architecture i386
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends wine32:i386

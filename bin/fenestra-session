@@ -1,0 +1,56 @@
+#!/bin/sh
+# Fenestra desktop session (started by the display manager via fenestra.desktop).
+export XDG_CURRENT_DESKTOP=Fenestra
+export XDG_SESSION_DESKTOP=fenestra
+export DESKTOP_SESSION=fenestra
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+export GTK_OVERLAY_SCROLLING=1
+export WINEDEBUG=-all
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+# First login: seed the user's configuration from the system defaults.
+if [ ! -d "$CONF/openbox" ]; then
+    mkdir -p "$CONF/openbox"
+    cp /usr/share/fenestra/openbox/rc.xml "$CONF/openbox/rc.xml"
+fi
+[ -f "$CONF/picom.conf" ] || cp /usr/share/fenestra/picom/picom.conf "$CONF/picom.conf"
+
+# Without real GPU acceleration (VMs, llvmpipe) OpenGL blur makes the screen stall:
+# fall back to the lightweight XRender profile.
+PICOM_CONF="$CONF/picom.conf"
+if [ -z "$FENESTRA_FULL_EFFECTS" ]; then
+    renderer="$(glxinfo -B 2>/dev/null | grep -i 'OpenGL renderer')"
+    if echo "$renderer" | grep -qiE 'llvmpipe|softpipe|swrast|virgl' || \
+       { [ -z "$renderer" ] && systemd-detect-virt -q 2>/dev/null; }; then
+        PICOM_CONF=/usr/share/fenestra/picom/picom-lite.conf
+    fi
+fi
+xdg-user-dirs-update 2>/dev/null
+
+# Session services
+command -v dbus-update-activation-environment >/dev/null && dbus-update-activation-environment --systemd --all
+command -v xsettingsd >/dev/null && xsettingsd -c /usr/share/fenestra/xsettingsd.conf &
+command -v lxpolkit >/dev/null && lxpolkit &
+command -v picom >/dev/null && picom --config "$PICOM_CONF" -b
+# Tap the Win key alone -> Alt+F1 (bound to the Start menu in rc.xml)
+command -v xcape >/dev/null && xcape -e 'Super_L=Alt_L|F1;Super_R=Alt_L|F1'
+command -v fcitx5 >/dev/null && fcitx5 -d
+command -v nm-applet >/dev/null && nm-applet --indicator >/dev/null 2>&1 &
+command -v light-locker >/dev/null && light-locker &
+fenestra-compat integrate >/dev/null 2>&1 &
+
+# Window manager
+openbox --config-file "$CONF/openbox/rc.xml" &
+sleep 0.5
+
+# XDG autostart entries (Startup apps in Task Manager)
+command -v dex >/dev/null && dex -a -e Fenestra &
+
+# The shell: restart it if it crashes, end the session when it exits cleanly.
+while :; do
+    fenestra-shell
+    status=$?
+    [ "$status" -eq 0 ] && break
+    sleep 1
+done
+openbox --exit

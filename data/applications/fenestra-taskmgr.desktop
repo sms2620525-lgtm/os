@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Task Manager
+Name[ko]=작업 관리자
+Comment=Monitor processes, performance and services
+Exec=fenestra-taskmgr
+Icon=fenestra-taskmgr
+Terminal=false
+Categories=System;Monitor;
+StartupWMClass=fenestra-taskmgr

@@ -1,0 +1,17 @@
+#!/bin/sh
+# OS identity and Calamares branding
+set -e
+cat > /etc/os-release <<'OSR'
+PRETTY_NAME="Fenestra OS 0.1 (based on Debian 12)"
+NAME="Fenestra OS"
+VERSION_ID="0.1"
+VERSION="0.1"
+ID=fenestra
+ID_LIKE=debian
+HOME_URL="https://github.com/sms2620525-lgtm/os"
+BUG_REPORT_URL="https://github.com/sms2620525-lgtm/os/issues"
+OSR
+echo "Fenestra OS 0.1 \\n \\l" > /etc/issue
+if [ -d /etc/calamares/branding/debian ]; then
+    sed -i 's/Debian GNU\/Linux/Fenestra OS/g; s/Debian/Fenestra OS/g' /etc/calamares/branding/debian/branding.desc || true
+fi

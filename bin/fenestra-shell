@@ -1,0 +1,6 @@
+#!/bin/sh
+# Fenestra launcher: runs the fenestra.shell Python module.
+FENESTRA_LIB="${FENESTRA_LIB:-/usr/lib/fenestra}"
+[ -d "$FENESTRA_LIB/fenestra" ] || FENESTRA_LIB="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="$FENESTRA_LIB${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m fenestra.shell "$@"

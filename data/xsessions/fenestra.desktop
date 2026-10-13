@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Fenestra
+Comment=Windows 11 style desktop for Linux
+Exec=fenestra-session
+TryExec=fenestra-session
+Type=Application
+DesktopNames=Fenestra

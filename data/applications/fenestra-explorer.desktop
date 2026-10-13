@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=File Explorer
+Name[ko]=파일 탐색기
+Comment=Browse files and folders
+Exec=fenestra-explorer %U
+Icon=fenestra-explorer
+Terminal=false
+Categories=System;FileManager;Utility;Core;
+MimeType=inode/directory;
+StartupWMClass=fenestra-explorer

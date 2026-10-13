@@ -1,0 +1,7 @@
+[Default Applications]
+inode/directory=fenestra-explorer.desktop
+application/x-ms-dos-executable=fenestra-compat-run.desktop
+application/x-msdownload=fenestra-compat-run.desktop
+application/x-msi=fenestra-compat-run.desktop
+application/x-bat=fenestra-compat-run.desktop
+application/x-ms-shortcut=fenestra-compat-run.desktop

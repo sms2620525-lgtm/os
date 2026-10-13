@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Run Windows program
+Name[ko]=Windows 프로그램 실행
+Exec=fenestra-compat run %f
+Icon=fenestra-compat
+NoDisplay=true
+MimeType=application/x-ms-dos-executable;application/x-msdownload;application/x-msi;application/x-ms-shortcut;application/x-bat;text/x-ms-regedit;

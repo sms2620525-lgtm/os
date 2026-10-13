@@ -1,0 +1,79 @@
+# --- base desktop ---
+xserver-xorg
+xserver-xorg-video-all
+xserver-xorg-input-all
+x11-xserver-utils
+xinit
+openbox
+picom
+xcape
+dex
+xdg-user-dirs
+xdg-utils
+xsettingsd
+wmctrl
+lightdm
+lightdm-gtk-greeter
+light-locker
+lxpolkit
+dbus-x11
+network-manager
+network-manager-gnome
+blueman
+pulseaudio
+pulseaudio-module-bluetooth
+pavucontrol
+brightnessctl
+redshift
+power-profiles-daemon
+ufw
+# --- Fenestra runtime ---
+python3
+python3-pyqt6
+python3-psutil
+python3-xlib
+python3-dbus
+make
+git
+# --- Windows compatibility layer ---
+wine
+wine64
+winetricks
+fonts-wine
+dosbox
+cabextract
+p7zip-full
+unzip
+# --- fonts & input (Korean/CJK ready) ---
+fonts-noto-core
+fonts-noto-cjk
+fonts-noto-color-emoji
+fonts-inter
+fcitx5
+fcitx5-hangul
+fcitx5-config-qt
+# --- apps ---
+firefox-esr
+qterminal
+mousepad
+galculator
+ristretto
+vlc
+flameshot
+file-roller
+gnome-software
+system-config-printer
+gvfs-backends
+# --- installer & live system ---
+calamares
+calamares-settings-debian
+live-boot
+live-config
+live-config-systemd
+sudo
+# --- virtual machine integration (UTM / QEMU / Parallels / VMware on Apple Silicon and PCs) ---
+spice-vdagent
+qemu-guest-agent
+open-vm-tools-desktop
+mesa-utils
+x11-utils

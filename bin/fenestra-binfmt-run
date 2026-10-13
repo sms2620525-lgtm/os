@@ -1,0 +1,3 @@
+#!/bin/sh
+# Called by binfmt_misc for every MZ executable, so ./program.exe just works.
+exec fenestra-compat run --wait "$@"

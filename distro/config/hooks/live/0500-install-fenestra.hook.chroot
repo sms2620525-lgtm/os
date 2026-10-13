@@ -1,0 +1,21 @@
+#!/bin/sh
+# Install Fenestra from the source tree copied into /opt/fenestra-src by build.sh
+set -e
+cd /opt/fenestra-src
+make install PREFIX=/usr
+sh scripts/install-themes.sh || echo "warning: Fluent themes could not be downloaded"
+install -d /etc/lightdm/lightdm.conf.d
+cp data/lightdm/50-fenestra.conf /etc/lightdm/lightdm.conf.d/
+cp data/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/
+update-alternatives --set x-terminal-emulator /usr/bin/qterminal 2>/dev/null || true
+update-alternatives --set x-session-manager /usr/bin/fenestra-session 2>/dev/null || \
+    update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/bin/fenestra-session 90
+update-desktop-database /usr/share/applications || true
+gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+# Desktop shortcut to the installer for the live session
+install -d /etc/skel/Desktop
+if [ -f /usr/share/applications/install-debian.desktop ]; then
+    sed 's/^Name=.*/Name=Install Fenestra OS/' /usr/share/applications/install-debian.desktop > /etc/skel/Desktop/install-fenestra.desktop
+    chmod +x /etc/skel/Desktop/install-fenestra.desktop
+fi
+rm -rf /opt/fenestra-src

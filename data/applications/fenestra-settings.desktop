@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Settings
+Name[ko]=설정
+Comment=Change system settings
+Exec=fenestra-settings
+Icon=fenestra-settings
+Terminal=false
+Categories=Settings;DesktopSettings;
+StartupWMClass=fenestra-settings

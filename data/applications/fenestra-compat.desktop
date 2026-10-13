@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Windows App Converter
+Name[ko]=Windows 앱 변환기
+Comment=Run Windows programs and convert them into Linux apps
+Exec=fenestra-compat gui %f
+Icon=fenestra-compat
+Terminal=false
+Categories=System;Emulator;Wine;
+MimeType=application/x-ms-dos-executable;application/x-msdownload;application/x-msi;application/x-bat;
+StartupWMClass=fenestra-compat

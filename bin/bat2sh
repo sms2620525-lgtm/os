@@ -1,0 +1,3 @@
+#!/bin/sh
+# Translate a Windows batch file to a Bash script: bat2sh file.bat [-o out.sh]
+exec fenestra-compat bat2sh "$@"

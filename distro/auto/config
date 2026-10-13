@@ -1,0 +1,28 @@
+#!/bin/sh
+# live-build configuration for the Fenestra OS ISO (Debian 12 "bookworm" base).
+# FENESTRA_ARCH=amd64 (default, PCs) or arm64 (Apple Silicon Macs in UTM/Parallels/VMware Fusion,
+# ARM laptops, Raspberry Pi 4/5 with UEFI firmware).
+set -e
+ARCH="${FENESTRA_ARCH:-amd64}"
+case "$ARCH" in
+    amd64) FLAVOUR=amd64; BOOTLOADERS="grub-efi,syslinux" ;;
+    arm64) FLAVOUR=arm64; BOOTLOADERS="grub-efi" ;;
+    *) echo "unsupported FENESTRA_ARCH=$ARCH (use amd64 or arm64)"; exit 1 ;;
+esac
+lb config noauto \
+    --distribution bookworm \
+    --archive-areas "main contrib non-free non-free-firmware" \
+    --architectures "$ARCH" \
+    --linux-flavours "$FLAVOUR" \
+    --bootloaders "$BOOTLOADERS" \
+    --binary-images iso-hybrid \
+    --bootappend-live "boot=live components quiet splash locales=en_US.UTF-8 username=fenestra hostname=fenestra" \
+    --iso-application "Fenestra OS" \
+    --iso-publisher "Fenestra OS project" \
+    --iso-volume "FENESTRA_${ARCH}" \
+    --image-name "fenestra-os-${ARCH}" \
+    --memtest none \
+    --apt-recommends false \
+    --firmware-chroot true \
+    --debian-installer none \
+    "${@}"
