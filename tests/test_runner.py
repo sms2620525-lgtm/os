@@ -52,7 +52,9 @@ def test_extract_icon(tmp_path, qapp):
 
 
 def test_write_launcher(tmp_path, qapp, monkeypatch):
+    from fenestra.common import platform as hostos
     from fenestra.compat import analyzer
+    monkeypatch.setattr(hostos, "IS_MAC", False)   # Linux launcher + .desktop entry, on any host
     monkeypatch.setattr(runner, "BIN_DIR", tmp_path / "bin")
     monkeypatch.setattr(runner, "APPS_DIR", tmp_path / "apps")
     monkeypatch.setattr(runner, "ICONS_DIR", tmp_path / "icons")
@@ -84,3 +86,17 @@ def test_real_wine_end_to_end(tmp_path):
     out = subprocess.run([res["launcher"]], capture_output=True, text=True, timeout=120).stdout.strip()
     import socket
     assert out.lower() == socket.gethostname().lower()
+
+
+def test_write_launcher_macos_app_bundle(tmp_path, qapp, monkeypatch):
+    """On macOS the converted program becomes an .app bundle in ~/Applications."""
+    from fenestra.common import platform as hostos
+    from fenestra.compat import analyzer
+    monkeypatch.setattr(hostos, "IS_MAC", True)
+    monkeypatch.setattr(runner, "MAC_APPS_DIR", tmp_path / "Applications")
+    exe = build_pe(tmp_path / "tool.exe", version={"ProductName": "Tool"})
+    plan = analyzer.analyze(str(exe))
+    launcher, app = runner.write_launcher("Tool", exe, tmp_path / "prefix", plan)
+    assert app == tmp_path / "Applications" / "Tool.app" and app.is_dir()
+    assert launcher.read_text().startswith("#!/bin/sh") and "tool.exe" in launcher.read_text()
+    assert (app / "Contents" / "Info.plist").exists()
