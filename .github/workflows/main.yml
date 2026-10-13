@@ -1,9 +1,0 @@
-- name: Compile ISO draft
-  # You may pin to the exact commit or the version.
-  # uses: MatthiasValvekens/pandoc-iso@a4fbeff36d2ac09ebdd05d900d6a7642a6b752a4
-  uses: MatthiasValvekens/pandoc-iso@v1.0.2
-  with:
-    # Markdown input file
-    md-in: 
-    # Docx output file
-    docx-out: 
